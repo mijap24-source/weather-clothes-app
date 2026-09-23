@@ -1,9 +1,100 @@
+:root {
+  --ink: #1c2b30;
+  --muted: #4c6067;
+  --card: rgba(255,255,255,0.6);
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 100px;
+  font-family: system-ui, sans-serif;
+  color: var(--ink);
+  display: flex;
+  justify-content: center;
+  transition: background 0.6s ease;
+}
+body.bg-clear      { background: linear-gradient(#8ec9f0, #e8f6ff); }
+body.bg-cloudy     { background: linear-gradient(#aeb9bd, #dde3e5); }
+body.bg-rain       { background: linear-gradient(#5c6e78, #93a5ad); }
+body.bg-heavy-rain { background: linear-gradient(#374752, #56656f); }
+body.bg-snow       { background: linear-gradient(#c7d3da, #f0f4f7); }
+body.bg-heavy-snow { background: linear-gradient(#8fa0aa, #c2d0d6); }
+body.bg-storm      { background: linear-gradient(#3a4650, #6b7580); }
+body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
+
+.screen {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100%;
+  padding: 24px 20px;
+  padding-top: calc(24px + env(safe-area-inset-top, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.temp { font-size: 64px; font-weight: 700; line-height: 1; margin: 0; }
+.condition { font-size: 16px; color: var(--muted); margin: 6px 0 0; }
+
+.character-stage {
+  flex: 1;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.character-placeholder {
+  width: 160px;
+  min-height: 260px;
+  border: 2px dashed var(--muted);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  padding: 10px;
+  position: relative;
+}
+.umbrella-icon {
+  position: absolute;
+  top: -6px;
+  right: -30px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.hidden { display: none; }
+
+.option-dots {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.option-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--card);
+  font-size: 13px;
+}
+.option-dot.active { outline: 2px solid var(--ink); }
+
+.extra-info {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+  flex-wrap: wrap;
 }
 
-h1 {
-    font-size: 40px;
-}

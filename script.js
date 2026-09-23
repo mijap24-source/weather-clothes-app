@@ -5,6 +5,74 @@ let outerLayerItems = [
     { name: "jacket", points: 3 }
 ];
 
+let weatherDescription = {
+    0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
+    45: "Foggy", 48: "Foggy",
+    51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+    56: "Light freezing drizzle", 57: "Dense freezing drizzle",
+    61: "Light rain", 63: "Rain", 65: "Heavy rain",
+    66: "Light hail", 67: "Heavy hail",
+    71: "Light snowfall", 72: "Snowfall", 73: "Heavy snowfall", 77: "Snow grains",
+    80: "Light rain showers", 81: "Rain showers", 82: "Heavy rain showers",
+    85: "Light snow showers", 86: "Heavy snow showers",
+    95: "Thunderstorm", 96: "Thunderstorm with light hail", 99: "Thunderstorm with heavy hail"
+};
+
+// NEW: turns a weather code into a background category name
+function getWeatherCategory(code) {
+    if (code === 0 || code === 1) return "clear";
+    if (code === 2 || code === 3) return "cloudy";
+    if (code === 45 || code === 48) return "fog";
+    if (code >= 51 && code <= 63 || code === 80 || code === 81) return "rain";
+    if (code >= 65 && code <= 67 || code === 82) return "heavyrain";
+    if (code === 71 || code === 77) return "snow";
+    if (code === 72 || code === 73 || code === 85 || code === 86) return "heavysnow";
+    if (code >= 95) return "storm";
+    return "cloudy";
+}
+
+// NEW: builds the row of option dots and wires up clicking them
+function renderOptionDots(base, comboSentencesArray) {
+    let dotsContainer = document.getElementById("optionDots");
+    dotsContainer.innerHTML = ""; // clear any old dots before rebuilding
+
+    let totalStates = comboSentencesArray.length + 1; // +1 for the bare state (index 0)
+
+    for (let i = 0; i < totalStates; i++) {
+        let dot = document.createElement("button");
+        dot.className = "option-dot";
+        dot.textContent = i;
+        dot.addEventListener("click", function () {
+            setActiveState(i, base, comboSentencesArray);
+        });
+        dotsContainer.appendChild(dot);
+    }
+
+    setActiveState(1, base, comboSentencesArray); // default to first real outfit, not bare
+}
+
+// NEW: updates the text label and highlights the active dot
+function setActiveState(index, base, comboSentencesArray) {
+    let label = document.getElementById("stateLabel");
+
+    if (index === 0) {
+        label.textContent = "Bare";
+    } else {
+        let comboText = comboSentencesArray[index - 1];
+        let outerPart = comboText === "" ? "no outer layer" : comboText;
+        label.textContent = "Top: " + base.top + ", Bottom: " + base.bottom + " + " + outerPart;
+    }
+
+    let allDots = document.querySelectorAll(".option-dot");
+    allDots.forEach(function (dot, dotIndex) {
+        if (dotIndex === index) {
+            dot.classList.add("active");
+        } else {
+            dot.classList.remove("active");
+        }
+    });
+}
+
 async function getWeather() {
     document.getElementById("loading").textContent = "Loading...";
 
@@ -16,58 +84,33 @@ async function getWeather() {
         let windSpeed = data.current.wind_speed_10m;
         let cloudy = data.current.cloud_cover > 50;
         let rain = data.current.precipitation_probability;
-        let weatherCode = data.current.weather_code
-        
-        let weatherDescription = {
-            0: "Clear sky",
-            1: "Mostly clear",
-            2: "Partly cloudy",
-            3: "Overcast",
-            45: "Foggy",
-            48: "Foggy",
-            51: "Light drizzle",
-            53: "Drizzle",
-            55: "Heavy drizzle",
-            56: "Light freezing drizzle",
-            57: "Dense freezing drizzle",
-            61: "Light rain",
-            63: "Rain",
-            65: "Heavy rain",
-            66: "Light hail",
-            67: "Heavy hail",
-            71: "Light snowfall",
-            72: "Snowfall",
-            73: "Heavy snowfall",
-            77: "Snow grains",
-            80: "Light rain showers",
-            81: "Rain showers",
-            82: "Heavy rain showers",
-            85: "Light snow showers",
-            86: "Heavy snow showers",
-            95: "Thunderstorm",
-            96: "Thunderstorm with light hail",
-            99: "Thunderstorm with heavy hail",
+        let weatherCode = data.current.weather_code;
+        let weather = weatherDescription[weatherCode];
 
-
-        }
-
-        let weather = weatherDescription[weatherCode]
         let result = getOutfitRecommendation(temperature, cloudy, windSpeed);
         let comboNames = result.outerOptions.map(combo => combo.map(item => item.name));
-        let comboSentences = comboNames.map(combo => combo.join(" + "));
-        let finalSentence = comboSentences.join(" OR ");
+        let comboSentencesArray = comboNames.map(combo => combo.join(" + "));
 
         let needUmbrella = getRain(rain);
 
-        document.getElementById("weather").textContent = weather
-        document.getElementById("temp").textContent = temperature + "°C"
-        document.getElementById("wind").textContent = windSpeed + " km/h"
-        document.getElementById("rain").textContent = rain + "%"
+        document.getElementById("weather").textContent = weather;
+        document.getElementById("temp").textContent = Math.round(temperature) + "°";
+        document.getElementById("wind").textContent = "Wind: " + windSpeed + " km/h";
+        document.getElementById("rain").textContent = "Rain: " + rain + "%";
 
-        document.getElementById("topResult").textContent = "Top: " + result.top;
-        document.getElementById("bottomResult").textContent = "Bottom: " + result.bottom;
-        document.getElementById("layersResult").textContent = "Outer layers: " + finalSentence;
-        document.getElementById("umbrellaResult").textContent = needUmbrella;
+        // NEW: background category
+        document.body.className = "bg-" + getWeatherCategory(weatherCode);
+
+        // NEW: umbrella icon show/hide
+        let umbrellaIcon = document.getElementById("umbrellaIcon");
+        if (needUmbrella !== "") {
+            umbrellaIcon.classList.remove("hidden");
+        } else {
+            umbrellaIcon.classList.add("hidden");
+        }
+
+        // NEW: build the option dots for this day's outfit
+        renderOptionDots(result, comboSentencesArray);
 
         document.getElementById("loading").textContent = "";
 
@@ -75,7 +118,6 @@ async function getWeather() {
         document.getElementById("loading").textContent = "Couldn't load weather: " + error.message;
     }
 }
-
 
 function getBasePoints(temperature) {
     let tempValue = Math.round(temperature / 5) * 5;
@@ -115,8 +157,9 @@ function findCombos(items, target) {
 function getRain(rain) {
     if (rain > 50) {
         return "Bring an umbrella.";
+    } else {
+        return "";
     }
-    else {return "";}
 }
 
 function getOutfitRecommendation(temperature, cloudy, windSpeed) {
