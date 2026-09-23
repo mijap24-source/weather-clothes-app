@@ -32,23 +32,32 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
   gap: 18px;
 }
 
-.temp { font-size: 96px; font-weight: 700; line-height: 1; }
-.condition { font-size: 22px; font-weight: 500; color: var(--muted); margin-top: 2px; margin-left: 15px; }
+.temp { font-family: fantasy; font-size: 100px; font-weight: 700; line-height: 1; }
+.condition { font-size: 22px; font-weight: 500; color: var(--muted); margin-left: 5px; }
+
+.screen {
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  padding: 24px 20px;
+  padding-top: calc(24px + env(safe-area-inset-top, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
 
 .character-stage {
   flex: 1;
-  min-height: 420px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  gap: 24px;
   position: relative;
-  padding-right: 40px;
+  overflow: hidden;
 }
 .character-placeholder {
-  width: 220px;
-  height: 400px;
+  width: 100%;
+  height: 110%;
   border: 2px dashed var(--muted);
   border-radius: 16px;
   display: flex;
@@ -60,6 +69,8 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
   padding: 8px;
   position: relative;
 }
+
+
 .umbrella-icon {
   position: absolute;
   top: -6px;
@@ -75,21 +86,39 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
 }
 .hidden { display: none; }
 
+
+.option-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  z-index: 2;
+}
+
 .option-dots {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
 }
 .option-dot {
-  width: 56px;
-  height: 56px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
-  border: 2px solid rgba(222, 231, 234, 1);
+  border: 2px solid rgb(255, 255, 255, 0.5);
   background: rgba(222, 231, 234, 0.5);
-  font-size: 20px;
-  color: rgba(125, 128, 129, 0.5)
+  font-family: fantasy;
+  font-size: 35px;
+  color: rgb(255, 255, 255, 0.5)
 }
-.option-dot.active { outline: 3px solid var(--ink); }
+.option-dot.active { 
+  border: 4px solid rgb(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 35px;
+  color: rgba(187, 195, 207, 0.5) 
+}
 
 .extra-info {
   display: flex;

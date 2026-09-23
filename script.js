@@ -127,7 +127,7 @@ function getBasePoints(temperature) {
 }
 
 function splitLayers(points) {
-    let top = Math.min(3, Math.max(1, points - 2));
+    let top = Math.min(3, Math.max(0, points - 2));
     let bottom = Math.min(3, Math.max(1, points - top));
     let leftover = Math.max(0, points - top - bottom);
     return { top: top, bottom: bottom, leftover: leftover };
