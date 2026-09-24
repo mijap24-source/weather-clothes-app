@@ -5,6 +5,13 @@ let outerLayerItems = [
     { name: "jacket", points: 3 }
 ];
 
+let outerLayerImageIds = {
+    "scarf": "outerScarfImg",
+    "thin layer": "outerThinLayerImg",
+    "coat": "outerCoatImg",
+    "jacket": "outerJacketImg"
+};
+
 let weatherDescription = {
     0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
     45: "Foggy", 48: "Foggy",
@@ -18,53 +25,71 @@ let weatherDescription = {
     95: "Thunderstorm", 96: "Thunderstorm with light hail", 99: "Thunderstorm with heavy hail"
 };
 
-// NEW: turns a weather code into a background category name
 function getWeatherCategory(code) {
     if (code === 0 || code === 1) return "clear";
     if (code === 2 || code === 3) return "cloudy";
     if (code === 45 || code === 48) return "fog";
     if (code >= 51 && code <= 63 || code === 80 || code === 81) return "rain";
-    if (code >= 65 && code <= 67 || code === 82) return "heavyrain";
+    if (code >= 65 && code <= 67 || code === 82) return "heavy-rain";
     if (code === 71 || code === 77) return "snow";
-    if (code === 72 || code === 73 || code === 85 || code === 86) return "heavysnow";
+    if (code === 72 || code === 73 || code === 85 || code === 86) return "heavy-snow";
     if (code >= 95) return "storm";
     return "cloudy";
 }
 
-// NEW: builds the row of option dots and wires up clicking them
-function renderOptionDots(base, comboSentencesArray) {
-    let dotsContainer = document.getElementById("optionDots");
-    dotsContainer.innerHTML = ""; // clear any old dots before rebuilding
+function renderTopLayer(topValue) {
+    document.querySelectorAll(".top-img").forEach(img => img.classList.add("hidden"));
+    document.getElementById("top" + topValue + "Img").classList.remove("hidden");
+}
 
-    let totalStates = comboSentencesArray.length + 1; // +1 for the bare state (index 0)
+function renderBottomLayer(bottomValue) {
+    document.querySelectorAll(".bottom-img").forEach(img => img.classList.add("hidden"));
+    document.getElementById("bottom" + bottomValue + "Img").classList.remove("hidden");
+}
+
+// NEW: shows only the outer items that belong to the currently selected combo
+function renderOuterLayers(itemNamesArray) {
+    document.querySelectorAll(".outer-img").forEach(img => img.classList.add("hidden"));
+
+    itemNamesArray.forEach(function (name) {
+        let imageId = outerLayerImageIds[name];
+        document.getElementById(imageId).classList.remove("hidden");
+    });
+}
+
+function renderOptionDots(base, comboNames) {
+    let dotsContainer = document.getElementById("optionDots");
+    dotsContainer.innerHTML = "";
+
+    let totalStates = comboNames.length + 1; // +1 for bare (index 0)
 
     for (let i = 0; i < totalStates; i++) {
         let dot = document.createElement("button");
         dot.className = "option-dot";
         dot.textContent = i;
         dot.addEventListener("click", function () {
-            setActiveState(i, base, comboSentencesArray);
+            setActiveState(i, base, comboNames);
         });
         dotsContainer.appendChild(dot);
     }
 
-    setActiveState(1, base, comboSentencesArray); // default to first real outfit, not bare
+    setActiveState(1, base, comboNames);
 }
 
-// NEW: updates the text label and highlights the active dot
-function setActiveState(index, base, comboSentencesArray) {
+function setActiveState(index, base, comboNames) {
     let label = document.getElementById("stateLabel");
 
     if (index === 0) {
         label.textContent = "Bare";
+        renderOuterLayers([]); // no outer items at all in the bare state
     } else {
-        let comboText = comboSentencesArray[index - 1];
-        let outerPart = comboText === "" ? "no outer layer" : comboText;
+        let itemNamesArray = comboNames[index - 1]; // e.g. ["scarf", "thin layer"] or []
+        let outerPart = itemNamesArray.length === 0 ? "no outer layer" : itemNamesArray.join(" + ");
         label.textContent = "Top: " + base.top + ", Bottom: " + base.bottom + " + " + outerPart;
+        renderOuterLayers(itemNamesArray);
     }
 
-    let allDots = document.querySelectorAll(".option-dot");
-    allDots.forEach(function (dot, dotIndex) {
+    document.querySelectorAll(".option-dot").forEach(function (dot, dotIndex) {
         if (dotIndex === index) {
             dot.classList.add("active");
         } else {
@@ -89,7 +114,6 @@ async function getWeather() {
 
         let result = getOutfitRecommendation(temperature, cloudy, windSpeed);
         let comboNames = result.outerOptions.map(combo => combo.map(item => item.name));
-        let comboSentencesArray = comboNames.map(combo => combo.join(" + "));
 
         let needUmbrella = getRain(rain);
 
@@ -98,10 +122,8 @@ async function getWeather() {
         document.getElementById("wind").textContent = "Wind: " + windSpeed + " km/h";
         document.getElementById("rain").textContent = "Rain: " + rain + "%";
 
-        // NEW: background category
         document.body.className = "bg-" + getWeatherCategory(weatherCode);
 
-        // NEW: umbrella icon show/hide
         let umbrellaIcon = document.getElementById("umbrellaIcon");
         if (needUmbrella !== "") {
             umbrellaIcon.classList.remove("hidden");
@@ -109,8 +131,9 @@ async function getWeather() {
             umbrellaIcon.classList.add("hidden");
         }
 
-        // NEW: build the option dots for this day's outfit
-        renderOptionDots(result, comboSentencesArray);
+        renderTopLayer(result.top);
+        renderBottomLayer(result.bottom);
+        renderOptionDots(result, comboNames);
 
         document.getElementById("loading").textContent = "";
 
