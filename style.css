@@ -25,7 +25,19 @@ body {
   overflow: hidden;
 }
 
+.loading {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--white);
+  position: fixed;
+  inset: 0;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.bg-loading    { background: linear-gradient(#1c2b30, #1c2b30); }
 body.bg-clear      { background: linear-gradient(#00C6FF, #3182CE); }
 body.bg-cloudy     { background: linear-gradient(#445566, #687A8C); }
 body.bg-rain       { background: linear-gradient(#263F56, #4779A3); }
@@ -36,6 +48,14 @@ body.bg-storm      { background: linear-gradient(#171827, #514A75); }
 body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
 
 
+.location { 
+  font-size: 15px; 
+  font-weight: 500; 
+  color: rgba(255,255,255,0.3); 
+  margin-left: 5px; 
+  z-index: 2;
+  text-transform: uppercase;
+}
 
 .temp { 
   font-family: Impact; 
@@ -43,6 +63,7 @@ body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
   font-weight: 700; 
   line-height: 1; 
   color: var(--white); 
+  z-index: 2;
 }
 
 .condition { 
@@ -50,12 +71,14 @@ body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
   font-weight: 500; 
   color: var(--white); 
   margin-left: 5px; 
+  z-index: 2;
 }
 
 .top-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  z-index: 1;
 }
 
 .extra-info {
@@ -68,6 +91,7 @@ body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
   font-weight: 400;
   line-height: 1;
   color: var(--white);
+  z-index: 2;
 }
 
 
@@ -81,17 +105,17 @@ body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
 }
 
 .character-placeholder {
+  position: fixed;
+  inset: 0;
+
   width: 100%;
-  height: 140%;
-  border-radius: 16px;
+  height: 100%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  color: var(--muted);
-  text-align: start;
-  padding: 8px;
-  position: relative;
+
+  z-index: 0;
 }
 
 
@@ -105,19 +129,6 @@ body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
 }
 
 
-.umbrella-icon {
-  position: absolute;
-  top: -6px;
-  right: -30px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
 .hidden { display: none; }
 
 

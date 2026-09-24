@@ -18,10 +18,12 @@
     <div class="temp-block">
         <p id="temp" class="temp"></p>
         <p id="weather" class="condition"></p>
+        <p id="location" class="location"></p>
     </div>
     <div class="extra-info">
         <span id="wind"></span>
         <span id="rain"></span>
+        <span id="uvIndex"></span>
     </div>
     </div>
 
@@ -29,7 +31,7 @@
       <div class="character-placeholder" id="characterPlaceholder">
         <span id="stateLabel" class="hidden"></span>
 
-        <img src="images/base.png" class="layer-img" id="baseImg">
+        <img src="images/base.png" class="layer-img base-img hidden" id="baseImg">
 
         <img src="images/bottom1.png" class="layer-img bottom-img hidden" id="bottom1Img">
         <img src="images/bottom2.png" class="layer-img bottom-img hidden" id="bottom2Img">
@@ -45,13 +47,13 @@
         <img src="images/jacket.png" class="layer-img outer-img hidden" id="outerJacketImg">
         <img src="images/scarf.png" class="layer-img outer-img hidden" id="outerScarfImg">
 
-        <img src="images/umbrella.png" class="umbrella-icon hidden" id="umbrellaIcon">
+        <img src="images/umbrella.png" class="layer-img umbrella-img hidden" id="umbrella-img">
       </div>
       </div>
       <div class="option-dots" id="optionDots"></div>
     </div>
 
-    <p id="loading"></p>
+    <p id="loading" class="loading">Loading...</p>
   </div>
 
   <script src="script.js"></script>
