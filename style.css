@@ -1,6 +1,6 @@
 :root {
   --ink: #1c2b30;
-  --muted: #4c6067;
+  --white: rgba(255,255,255,0.7);
   --card: rgba(255,255,255,0.6);
 }
 * { box-sizing: border-box; margin: 0; }
@@ -26,19 +26,31 @@ body {
 }
 
 
-body.bg-clear      { background: linear-gradient(#8ec9f0, #e8f6ff); }
-body.bg-cloudy     { background: linear-gradient(#aeb9bd, #dde3e5); }
-body.bg-rain       { background: linear-gradient(#5c6e78, #93a5ad); }
-body.bg-heavy-rain { background: linear-gradient(#374752, #56656f); }
-body.bg-snow       { background: linear-gradient(#c7d3da, #f0f4f7); }
-body.bg-heavy-snow { background: linear-gradient(#8fa0aa, #c2d0d6); }
-body.bg-storm      { background: linear-gradient(#3a4650, #6b7580); }
-body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
+body.bg-clear      { background: linear-gradient(#00C6FF, #3182CE); }
+body.bg-cloudy     { background: linear-gradient(#445566, #687A8C); }
+body.bg-rain       { background: linear-gradient(#263F56, #4779A3); }
+body.bg-heavy-rain { background: linear-gradient(#172A3A, #315A7A); }
+body.bg-snow       { background: linear-gradient(#A8C8E0, #6F9DB8); }
+body.bg-heavy-snow { background: linear-gradient(#718FA5, #62869D); }
+body.bg-storm      { background: linear-gradient(#171827, #514A75); }
+body.bg-fog        { background: linear-gradient(#8E9A9B, #718083); }
 
 
 
-.temp { font-family: fantasy; font-size: 100px; font-weight: 700; line-height: 1; }
-.condition { font-size: 22px; font-weight: 500; color: var(--muted); margin-left: 5px; }
+.temp { 
+  font-family: Impact; 
+  font-size: 100px; 
+  font-weight: 700; 
+  line-height: 1; 
+  color: var(--white); 
+}
+
+.condition { 
+  font-size: 22px; 
+  font-weight: 500; 
+  color: var(--white); 
+  margin-left: 5px; 
+}
 
 .top-row {
   display: flex;
@@ -53,7 +65,9 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
   text-align: right;
   gap: 4px;
   font-size: 13px;
-  color: var(--muted);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--white);
 }
 
 
@@ -109,7 +123,7 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
 
 .option-dots {
   position: absolute;
-  bottom: 12px;
+  bottom: 20px;
   left: 0;
   right: 0;
   display: flex;
@@ -130,14 +144,15 @@ body.bg-fog        { background: linear-gradient(#b7bcbd, #d8dbdb); }
   border-radius: 50%;
   border: 2px solid rgb(255, 255, 255, 0.5);
   background: rgba(222, 231, 234, 0.5);
-  font-family: fantasy;
+  font-family: Impact;
+  font-weight: 700;
   font-size: 35px;
-  color: rgb(255, 255, 255, 0.5)
+  color: rgba(187, 195, 207, 0.5) 
 }
 
 .option-dot.active { 
   border: 4px solid rgb(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.5);
   font-size: 35px;
-  color: rgba(187, 195, 207, 0.5) 
+  color: rgb(255, 255, 255, 0.5);
 }
